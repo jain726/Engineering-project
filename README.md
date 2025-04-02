@@ -1,4 +1,4 @@
-function M1A_main_SSS_TT_mbarish
+function M1A_main_222_21_mbarish
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ENGR 132 
 % Program Description 
