@@ -2,21 +2,21 @@ function M1A_main_222_21_mbarish
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ENGR 132 
 % Program Description 
-% replace this text with your program description as a comment
+% Main function to create visual models and text displays utilizing 
+% subfunctions
 %
 % Function Call
-% replace this text with a comment that states the function call
+% M1A_main_222_21_mbarish
 %
 % Input Arguments
-% replace this text with a commented list of the input arguments
 %
 % Output Arguments
-% replace this text with a commented list of the output arguments
 %
 % Assignment Information
-%   Assignment:     M##, Problem #
-%   Team member:    Name, login@purdue.edu [repeat for each person]
-%   Team ID:        ###-##
+%   Assignment:     M1, Problem A
+%   Team member:    Max Barish, mbarish@purdue.edu
+   Team member:    , @purdue.edu
+%   Team ID:        222-21
 %   Academic Integrity:
 %     [] We worked with one or more peers but our collaboration
 %        maintained academic integrity.
@@ -28,8 +28,8 @@ function M1A_main_222_21_mbarish
 %% INITIALIZATION
 
 Test_data = readmatrix("Sp25_cruiseAuto_experimental_data.csv", ...
-    "NumHeaderLines", 2);
-
+    "NumHeaderLines", 2); % Import data into function
+    
 %% ____________________
 %% CALCULATIONS
 
@@ -38,3 +38,12 @@ Test_data = readmatrix("Sp25_cruiseAuto_experimental_data.csv", ...
 
 %% ____________________
 %% RESULTS
+
+
+%% ____________________
+%% ACADEMIC INTEGRITY STATEMENT
+% We have not used source code obtained from any other unauthorized
+% source, either modified or unmodified. Neither have we provided
+% access to my code to another. The program we are submitting
+% is our own original work.
+
