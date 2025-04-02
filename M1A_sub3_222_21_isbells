@@ -1,5 +1,5 @@
 function [out3] = M1A_sub3_222_21_isbells(Test_data)
 % finds the acceleration start time and the time constant. Code will ensure proper identification of both time parameters
-out3 = 25;
+out3 = Test_data(1)
 fprintf("Data Successfully passed to subfunction 3 programed by Spencer")
 end
