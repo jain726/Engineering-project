@@ -1,5 +1,9 @@
 function [out4] = M1A_sub4_222_21_jain726(Test_data)
+% Find initial and final speeds 
 
-out2 = Test_data
-fprintf("Data Successfully passed to subfunction 2 programed by Saran")
+% Calculations
+out4 = Test_data;
+
+% Print 
+fprintf("Data Successfully passed to subfunction 4 programed by Sidh\n")
 end
