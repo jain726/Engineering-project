@@ -28,7 +28,7 @@ function M1A_main_222_21_mbarish
 %% INITIALIZATION
 
 Test_data = readmatrix("Sp25_cruiseAuto_experimental_data.csv", ...
-    "NumHeaderLines", 2); % Import data into function
+    "NumHeaderLines", 1); % Import data into function
     
 %% ____________________
 %% CALCULATIONS
