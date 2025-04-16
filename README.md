@@ -1,40 +1,24 @@
-function M1A_main_222_21_mbarish
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ENGR 132 
-% Program Description 
-% replace this text with your program description as a comment
-%
-% Function Call
-% replace this text with a comment that states the function call
-%
-% Input Arguments
-% replace this text with a commented list of the input arguments
-%
-% Output Arguments
-% replace this text with a commented list of the output arguments
-%
-% Assignment Information
-%   Assignment:     M##, Problem #
-%   Team member:    Name, login@purdue.edu [repeat for each person]
-%   Team ID:        ###-##
-%   Academic Integrity:
-%     [] We worked with one or more peers but our collaboration
-%        maintained academic integrity.
-%     Peers we worked with: Name, login@purdue [repeat for each]
-% did you complete the assignment information? delete this line if yes
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% ____________________
-%% INITIALIZATION
-
-Test_data = readmatrix("Sp25_cruiseAuto_experimental_data.csv", ...
-    "NumHeaderLines", 2);
-
-%% ____________________
 %% CALCULATIONS
+percent_wise = 0.02; % this is the "percent line" that we will compare to find where it does not "passback"
 
-%% ____________________
-%% FORMATTED TEXT/FIGURE DISPLAYS
+%column mover
+for i = 2:size(test_data, 2)
+    col_data = test_data(:, i);                     % Get the entire column
+    low(i) = min(col_data);
+    top(i) = max(col_data);
+    boundry(i) = ((top(i)-low(i))*percent_wise);
 
-%% ____________________
-%% RESULTS
+    %point mover
+    for j = 1:size(col_data,1)
+        
+        %identifiery
+        if col_data(j) <= boundry(i)
+           velo_at_last(i) = col_data(j);
+           
+           j = j+1;
+           
+        else 
+           j = j+1;
+        end %ends if statement
+    end
+end
