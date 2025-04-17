@@ -1,9 +1,51 @@
-function [out4] = M1A_sub4_222_21_jain726(Test_data)
-% Find initial and final speeds 
+function [initial_speed, final_speed] = M2_sub4_222_21_jain726(Test_data)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ENGR 132 
+% Program Description 
+% Sub function to find the initial and final velocity from the velocity
+% data using change in slope.
+%
+% Function Call
+% [initial_speed, final_speed] = M2_sub4_222_21_jain726(Test_data)
+%
+% Input Arguments
+% Test Data
+%
+% Output Arguments
+% 1) Initial Velocity (when it starts increasing)
+% 2) Final Velocity (maximum value)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Calculations
-out4 = Test_data;
+%% INITIALIZATION
+data = readmatrix('Sp25_cruiseAuto_experimental_data.csv');
+[numRows, numCols] = size(data);
+Initial_Speed_Vector = [];
+Final_Speed_Vector = [];
+threshold = 0.05; % Small change threshold to detect increase
 
-% Print 
-fprintf("Data Successfully passed to subfunction 4 programed by Sidh\n")
+%% CALCULATIONS
+for col = 2:numCols
+    columnData = data(:, col);
+    dV = diff(columnData);  % Change in velocity
+
+    % Find first index where change exceeds threshold
+    startIdx = find(dV > threshold, 1, 'first');
+
+    if ~isempty(startIdx)
+        Initial_speed = columnData(startIdx);
+    else
+        Initial_speed = NaN;  % If no increase is found
+    end
+
+    Final_speed = max(columnData);
+
+    Initial_Speed_Vector = [Initial_Speed_Vector, Initial_speed];
+    Final_Speed_Vector = [Final_Speed_Vector, Final_speed];
+end
+
+%% OUTPUT
+initial_speed = Initial_Speed_Vector;
+final_speed = Final_Speed_Vector;
+disp(final_speed)
+
 end
