@@ -1,0 +1,53 @@
+function [] = M2_main_222_21_mbarish()
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ENGR 132 
+% Program Description 
+% Main function to use subfunctions to smooth and clean data, determine
+% t_0, the time constant, intitial velocity, and final velocity
+%
+% Function Call
+% M2_main_222_21_mbarish
+%
+% Input Arguments
+%
+% Output Arguments
+%
+% Assignment Information
+%   Assignment:     M2, Problem 1
+%   Team member:    Max Barish, mbarish@purdue.edu
+%   Team member:    Sidh Jain, jain726@purdue.edu
+%   Team member:    Spencer Isbel, isbells@purdue.edu
+%   Team member:    Saran Fujiwara, sfujiwa@purdue.edu
+%   Team ID:        222-21
+%   Academic Integrity:
+%     [] We worked with one or more peers but our collaboration
+%        maintained academic integrity.
+%     Peers we worked with: Name, login@purdue [repeat for each]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% ____________________
+%% INITIALIZATION
+Test_data = readmatrix("Sp25_cruiseAuto_" + ...
+     "experimental_data.csv");
+
+%% ____________________
+%% CALCULATIONS
+[new_data] = M2_sub2_222_21_sfujiwa(Test_data);
+
+[initial_speed, final_speed] = M2_sub4_222_21_jain726(new_data);
+
+[t_0, time_constant] = M2_sub3_222_21_isbells(new_data);
+
+%% ____________________
+%% FORMATTED TEXT/FIGURE DISPLAYS
+
+
+%% ____________________
+%% RESULTS
+
+%% ____________________
+%% ACADEMIC INTEGRITY STATEMENT
+% We have not used source code obtained from any other unauthorized
+% source, either modified or unmodified. Neither have we provided
+% access to my code to another. The program we are submitting
+% is our own original work.
