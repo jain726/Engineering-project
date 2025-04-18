@@ -17,7 +17,7 @@ function [initial_speed, final_speed] = M2_sub4_222_21_jain726(Test_data)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% INITIALIZATION
-data = readmatrix('Sp25_cruiseAuto_experimental_data.csv');
+data = readmatrix('Test_data');
 [numRows, numCols] = size(data);
 Initial_Speed_Vector = [];
 Final_Speed_Vector = [];
