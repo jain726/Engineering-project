@@ -26,51 +26,103 @@ function[new_data] = M3_sub2_222_21_sfujiwa(test_data)
 %% ____________________
 %% INITIALIZATION
 
-%test_data = readmatrix("Sp25_cruiseAuto_M3benchmark_data.csv");
-% test_data = readmatrix("Sp25_cruiseAuto_experimental_data.csv");
+% % read matrix, only for use in making of subfunction
+%test_data = readmatrix("Sp25_cruiseAuto_experimental_data.csv");
 
 time = test_data(:,1);
 
 %% ____________________
 %% CALCULATIONS
 
-new_data = zeros(size(test_data));
-new_data(:,1) = test_data(:,1);
-
-% find slopes of the data
-slopes = zeros(size(test_data));
-for n = 2 : length(test_data(1, 1:end))
-    for m = 2 : length(test_data(1:end, 1))
-        slopes(:, n) = (test_data(m, n) - test_data(m -1, n)) / (test_data(m, 1) - test_data(m -1, 1));
-    end
-end
-
-% removing frozen data
-for n = 2 : length(test_data(1, 1:end))
-    for m = 1 : length(test_data(1:end, 1)) - 1
+% removing frozen data & linear interpolation of removed data
+% any frozen data where values remain constant gets removed and linear
+% interpolated in place
+for n = 2 : length(test_data(1, 1:end)) % for loop from index 1 to index last column
+    m = 1;
+    while m < length(test_data(1:end, 1)) - 4 % for loop
         if test_data(m + 1, n) == test_data(m, n)
-            test_data(m, n) = 0;
+            idxi = m;
+            idx = 0;
+            idxf = 0;
+            % finds the interval where linspace has to be used to
+            % interporlate new data and replaces old data
+            while test_data(m + idx, n) == test_data(m, n)
+                idx = idx + 1;
+                idxf = m + idx;
+            end
+            temp_data = linspace(test_data(idxi, n), test_data(idxf + 3, n), idx + 3);
+            test_data(idxi:idxf+2, n) = temp_data;
+
+            m = m + idx;
         end
+        m = m + 1;
     end
 end
 
-% division of labor
+idxi = 0;
+idxf = 0;
+temp_data = 0;
 
+% Uses Linear interpolation in order to fill in the gaps where NaN is
+% present. 
 for n = 2 : length(test_data(1, 1:end))
-    for m = 2 : length(test_data(1:end, 1))
-        
+    m = 1;
+    while m < length(test_data(1:end, 1)) - 4
+        if isnan(test_data(m, n))
+            idxi = m;
+            idx = 0;
+            idxf = 0;
+            % finds te interval between start of NaN chain and end of NaN
+            % chain for linspace to work.
+            while isnan(test_data(m + idx, n))
+                idx = idx + 1;
+                idxf = m + idx;
+            end
+            temp_data = linspace(test_data(idxi-1, n), test_data(idxf + 1, n), idx + 2);
+            test_data(idxi:idxf+1, n) = temp_data;
+
+            m = m + idx;
+        end
+        m = m + 1;
     end
 end
 
+% finding initial instance of acceleration
+% round data to 0 decimal points to allow mode function to work
+rounded_data = round(test_data, 0);
+new_data = zeros(size(test_data));
+new_data(:,1) = time;
+
+% finds the median of y values of each individual data set 
 for n = 2 : length(test_data(1, 1:end))
-    new_data(:,n) = smoothdata(test_data(:,n), 'movmedian');
+    data_mid = round((max(test_data(:,n)) - min(test_data(:,n))) / 2, 0); % finds the median y value in data set
+    row = find(rounded_data(:,n) == data_mid); % find the row in which the median y value is located
+
+    start_speed = mode(rounded_data(1:row(1) , n)); % uses range of 1 to row, find mode of initial start time
+    start_idx = find(rounded_data(:, n) == start_speed); % find last row in which new mode appears
+    start_idx = start_idx(end);
+
+        % Movmedian and movmean smooths and removes noise for parts before
+        % start time and after start time of acceleration, this is to avoid
+        % making the instance of start accleration distinct
+        new_data(1:start_idx, n) = smoothdata(test_data(1:start_idx, n),'movmedian', 'SmoothingFactor', 0.8);
+        new_data(start_idx:end, n) = smoothdata(test_data(start_idx:end, n),'movmedian', 'SmoothingFactor', 0.1);
+        new_data(start_idx:end, n) = smoothdata(test_data(start_idx:end, n),'movmean', 'SmoothingFactor', 0.1);
+    
 end
 
+% smoothdata function with all the data set together, will remove any
+% errors created in the prior section and uses movmean to finally smooth
+% out all incosistencies after removing high/low data and outliers
+new_data(:, 2:end) = smoothdata(new_data(:, 2:end),'movmedian', 'SmoothingFactor', 0.1);
+new_data(:, 2:end) = smoothdata(new_data(:, 2:end),'movmean', 'SmoothingFactor', 0.008);
 
 %% ____________________
 %% FORMATTED TEXT/FIGURE DISPLAYS
 
 % %Loop to create 9 subplots with 5 lines on each plot of different colors
+% % Used only for data visulization within subfunction, gets commented out
+% % as it is not used for main function
 % 
 % % Initialize variables to use in loop
 % count = 1;
@@ -98,6 +150,7 @@ end
 %% ____________________
 %% RESULTS
 
+new_data;
 
 %% ____________________
 %% ACADEMIC INTEGRITY STATEMENT
