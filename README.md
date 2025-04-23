@@ -1,71 +1,81 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ENGR 132 
-% Program Description 
-% Create plots for each test
-%
-% Function Call
-% M1B_main_222_21_mbarish
-%
-% Input Arguments
-%
-% Output Arguments
-%
-% Assignment Information
-%   Assignment:     M1B, Problem 1
-%   Team member:    Max Barish, mbarish@purdue.edu
-%   Team member:    Sidh Jain, jain726@purdue.edu
-%   Team member:    Spencer Isbel, isbells@purdue.edu
-%   Team member:    Saran Fujiwara, sfujiwa@purdue.edu
-%   Team ID:        222-21
-%   Academic Integrity:
-%     [] We worked with one or more peers but our collaboration
-%        maintained academic integrity.
-%     Peers we worked with: Name, login@purdue [repeat for each]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% ____________________
-%% INITIALIZATION
-
-% Import data matrix
-test_data = readmatrix("Sp25_cruiseAuto_" + ...
-    "experimental_data.csv","NumHeaderLines",1);
-
-% Extrapolate data
-t = test_data(:,1); % Isolate time column
-s_data = test_data(:,2:end); % Isolate columns of speed data
-
-% Initialize variables to use in loop
-count = 0;
-colors = ['r', 'g', 'b', 'm', 'c'];
-Sub_titles = {'Compact Winter', 'Compact AllSeason', 'Compact Summer', ...
-    'Sedan Winter', 'Sedan AllSeason', 'Sedan Summer', 'SUV Winter', ...
-    'SUV AllSeason', 'SUV Summer'};
-
-%% ____________________
-%% CALCULATIONS
+function [] = M3_benchmark_222_21(t0_b, v0_b, vf_b, tao_b, t0_m, v0_m, vf_m, tao_m, test_data)
+% Plot both our model and optimal model
+% t_0 = initial time of acceleration
+% v_0 = initial velocity
+% v_f = final velocity
+% tao = time constant
+% Input variables can be vectors but they must all be the same length
 
 
-%% ____________________
-%% FORMATTED TEXT/FIGURE DISPLAYS
 
-% Loop to create 9 subplots with 5 lines on each plot of different colors
-for idx = 1 : 9 % Initialize idx to specify subplots
-    subplot(3,3,idx) % Set up subplot loop
-    for dataset = 1 : 5 % Set up for loop to create each line
-        count = count + 1; % Increment count by 1 each loop
-        plot(t,s_data(:,count), colors(dataset)) % Plot each line
-        hold on % Turn on hold
-        grid on % Turn on grid
-        xlabel('Time (s)') % Create x-axis title
-        ylabel('Speed (m/s)') % Create y-axis title
+t = test_data(:,1);
+vels = test_data(:, 2:end);
+Sub_titles = {'Compact Hatchback', 'Midsize Sedan', 'Large SUV'};
+
+    for i = 1 : length(t0_b)
+        % Preallocate velocity vectors
+        v_of_t_b = zeros(length(t), 1);
+
+        for j = 1 : length(t)
+            idx = 1;
+            while t(idx) < t0_b(i) - 5
+                idx = idx + 1;
+            end
+            t = t(idx-1:end);
+            if t(j) < t0_b(i)
+                v_of_t_b(j) = v0_b(i);
+            else
+                v_of_t_b(j) = vf_b(i) + (1 - exp(-(t(j) - t0_b(i)) / ...
+                    tao_b(i))) * (vf_b(i) - v0_b(i));
+            end
+        end
+
+        % Now plot after computing the vectors
+        col_data = vels(:, i);
+        subplot(length(t0_b), 1, i)
+        plot(t, v_of_t_b, 'r')
+        hold on
+        plot(t, col_data, 'b')
+        grid on
+        xlabel('Time (s)')
+        ylabel('Speed (m/s)')
+        legend('Model', 'Data', 'Location', 'best')
+        title(Sub_titles{i})
     end
-    title(Sub_titles{idx}); % Give titles to each subplot
+    sgtitle("Speed (m/s) Over Time (s) for Each Set of Tests")
 end
-sgtitle("Speed (m/s) Over Time (s) for " + ...
-    "Each Set of Tests") % Create an overall title
-%% ACADEMIC INTEGRITY STATEMENT
-% We have not used source code obtained from any other unauthorized
-% source, either modified or unmodified. Neither have we provided
-% access to my code to another. The program we are submitting
-% is our own original work.
 
+
+
+% % Initialize data
+% t = test_data(:,1);
+% Sub_titles = {'Compact Hatchback', 'Midsize Sedan', 'Large SUV'};
+% 
+% % 
+% for i = 1 : length(t0_b)
+%     for j = 1 : length(t)
+%         if t(j) < t0_b(i) 
+%             v_of_t_b(j) = v0_b(i);
+%             v_of_t_m(j) = v0_m(i);
+%         else
+%             v_of_t_b(j) = vf_b(i) + (1 - exp(-(t(j) - t0_b(i)) / ...
+%                 tao_b(i))) * (vf_b(i) - v0_b(i));
+%             v_of_t_m(j) = vf_m(i) + (1 - exp(-(t(j) - t0_m(i)) / ...
+%                 tao_m(i))) * (vf_m(i) - v0_m(i));
+%         end
+% 
+%         subplot(length(t0_b),1,i) % Set up subplot loop
+%         plot(t, v_of_t_b, "r-") % Plot benchmark
+%         hold on % Turn on hold
+%         plot(t, v_of_t_m, "b-") % Plot algorithm model
+%         grid on % Turn on grid
+%         xlabel('Time (s)') % Create x-axis title
+%         ylabel('Speed (m/s)') % Create y-axis title
+%         legend('benchmark model', 'algorithm model', 'Location','best')
+%         title(Sub_titles{i}); % Give titles to each subplot
+%         hold off
+% 
+%     end
+%     sgtitle("Speed (m/s) Over Time (s) for " + ...
+%         "Each Set of Tests") % Create an overall title
+% end
