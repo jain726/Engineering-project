@@ -1,22 +1,22 @@
-%function [new_data] = M2_sub2_222_21_sfujiwa(test_data)
+function[new_data] = M3_sub2_222_21_sfujiwa(test_data)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ENGR 132 
 % Program Description 
-% noise reduction
+%replace this text with your program description as a comment
 %
 % Function Call
-% M2_sub_2_222_21 
+% replace this text with a comment that states the function call
 %
 % Input Arguments
-% test_data
+% replace this text with a commented list of the input arguments
 %
 % Output Arguments
-% new_data
+% replace this text with a commented list of the output arguments
 %
 % Assignment Information
-%   Assignment:     M2, Problem 1
-%   Team member:    Saran, sfujiwa@purdue.edu [repeat for each person]
-%   Team ID:        222-21
+%   Assignment:     M3, sub2
+%   Team member:    Name, login@purdue.edu [repeat for each person]
+%   Team ID:        ###-##
 %   Academic Integrity:
 %     [] We worked with one or more peers but our collaboration
 %        maintained academic integrity.
@@ -26,110 +26,52 @@
 %% ____________________
 %% INITIALIZATION
 
-test_data = readmatrix("Sp25_cruiseAuto_experimental_data.csv");
+%test_data = readmatrix("Sp25_cruiseAuto_M3benchmark_data.csv");
+% test_data = readmatrix("Sp25_cruiseAuto_experimental_data.csv");
 
 time = test_data(:,1);
-med_set = zeros(5001, 9);
 
 %% ____________________
 %% CALCULATIONS
 
+new_data = zeros(size(test_data));
+new_data(:,1) = test_data(:,1);
 
-% removing frozen data 
-idx = 0;
-for n = 2 : 46
-    for m = 1 : 5001
-        if m ~= 5001 && (test_data(m,n) == test_data(m+1, n))
-            idx = 0;
-            while test_data(m,n) == test_data(m+idx, n) 
-                idx = idx + 1;
-                end
-                if idx > 3
-                    test_data(m:m+idx, n) = NaN;
-            end
+% find slopes of the data
+slopes = zeros(size(test_data));
+for n = 2 : length(test_data(1, 1:end))
+    for m = 2 : length(test_data(1:end, 1))
+        slopes(:, n) = (test_data(m, n) - test_data(m -1, n)) / (test_data(m, 1) - test_data(m -1, 1));
+    end
+end
+
+% removing frozen data
+for n = 2 : length(test_data(1, 1:end))
+    for m = 1 : length(test_data(1:end, 1)) - 1
+        if test_data(m + 1, n) == test_data(m, n)
+            test_data(m, n) = 0;
         end
     end
 end
 
-% individual data set smoothing
-idx = 10;
-for run = 1 : 5
-    for n = 2:46
-       for m = 1 + idx : 5001 - idx
-            test_data(m-idx, n) = mean(test_data(m-idx:m+idx, n), 'omitnan');
-       end
-    end
-end
-test_data(end-idx:end, n) = median(test_data(end-idx:end, n), 'omitnan');
+% division of labor
 
-% individual linear regression smoothing
-slopes(:,1:2) = test_data(:,1:2);
-slopes(:,46) = test_data(:,46);
-for n = 2 : 46
-    for m = 1 : 5000
-        slopes(m, n) = (test_data(m, n) - test_data(m + 1, n)) / 0.01;
+for n = 2 : length(test_data(1, 1:end))
+    for m = 2 : length(test_data(1:end, 1))
+        
     end
 end
 
-delta = 0;
-for n = 2 : 46
-    for m = 1 : 5000
-        delta = 0;
-        idx = 0;
-        if m + 20 < 5000 && abs((slopes(m + 10, n) - slopes(m, n)) > 0.1)
-            delta = m;
-            while (abs(slopes(m + idx, n) - slopes(m, n)) > 0.2)
-                delta = delta + 1;
-                idx = idx + 1;
-            end
-                valid_idx = ~isnan(slopes(m:delta, n));
-                newy = test_data(valid_idx);
-            if ~isnan(slopes(m, n)) && ~isnan(slopes(delta, n)) && (delta - m + 1) >= 2
-                val = linspace(slope(m, n), slope(delta, n), delta - m + 1); % smooth linear interpolation
-                test_data(m:delta, n) = val;
-            end
-        end
-        if isnan(slopes(m,n))
-            delta = m;
-            while m + idx < 5000 && isnan(slopes(m + idx, n))
-                idx = idx + 1;
-                delta = delta + 1;
-            end
-            if ~isnan(slopes(m, n)) && ~isnan(slopes(delta, n)) && (delta - m + 1) >= 2
-                val = linspace(slope(m, n), slope(delta, n), delta - m + 1); % smooth linear interpolation
-                test_data(m:delta, n) = val;
-            end
-        end
-    end
+for n = 2 : length(test_data(1, 1:end))
+    new_data(:,n) = smoothdata(test_data(:,n), 'movmedian');
 end
 
-% %find median of 5 trials 
-% cnt = 0;
-% idx = 0;
-% for n = 2:5:46
-%     idx = idx + 1;
-%     cnt = cnt + 1;
-%     data_set = test_data(:, 1+n : 4+n);
-%     for m = 1 : 5001
-%         med = median(data_set(m,:));
-%         med_set(m, cnt) = med;
-%     end
-% end
 
 %% ____________________
 %% FORMATTED TEXT/FIGURE DISPLAYS
 
-% figure; 
-% for p = 1 : 9
-%     subplot(3,3,p);
-%     plot(time, med_set(:, p));
-%     ylim([min(med_set(:,p))-10, max(med_set(:,p))+5])
-%     grid on
-%     hold on
-% end
-
-% Loop to create 9 subplots with 5 lines on each plot of different colors
-
+% %Loop to create 9 subplots with 5 lines on each plot of different colors
+% 
 % % Initialize variables to use in loop
 % count = 1;
 % colors = ['r', 'g', 'b', 'm', 'c'];
@@ -141,7 +83,7 @@ end
 %     subplot(3,3,idx) % Set up subplot loop
 %     for dataset = 1 : 5 % Set up for loop to create each line
 %         count = count + 1; % Increment count by 1 each loop
-%         plot(test_data(:,1), test_data(:,count), colors(dataset)) % Plot each line
+%         plot(time, new_data(:,count), colors(dataset)) % Plot each line
 %         hold on % Turn on hold
 %         grid on % Turn on grid
 %         xlabel('Time (s)') % Create x-axis title
@@ -152,9 +94,6 @@ end
 % sgtitle("Speed (m/s) Over Time (s) for " + ...
 %     "Each Set of Tests") % Create an overall title
 
-
-% figure
-% plot(time, std_set)
 
 %% ____________________
 %% RESULTS
