@@ -1,0 +1,44 @@
+function [SSE] = function_name(velocity_data,)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ENGR 132 
+% Program Description 
+% Sub function to find the initial and final velocity from the velocity
+% data using change in slope.
+%
+% Function Call
+% [initial_speed, final_speed] = M2_sub4_222_21_jain726(Test_data)
+%
+% Input Arguments
+% Test Data
+%
+% Output Arguments
+% 1) Initial Velocity (when it starts increasing)
+% 2) Final Velocity (maximum value)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% INITIALIZATION
+
+
+%% CALCULATIONS
+% column mover
+ SSE_all = zeros(1, size(velocities,2)); % Stores SSE for each graph
+
+for i = 1:size(velocities,2) % Loop through each graph
+    col_data = velocities(:,i); % Get data for current graph
+    model_data = velocity_model(:,i); % Assuming you have a model for each graph
+
+    SSE = 0;
+    for j = 1:size(col_data,1)
+        SSE = SSE + (col_data(j) - model_data(j))^2;
+    end
+
+    SSE_all(i) = SSE; % Store the SSE for this graph
+end
+
+ 
+
+
+%% OUTPUT
+
+
+end
