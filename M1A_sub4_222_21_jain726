@@ -31,6 +31,12 @@ for col = 2:numCols
     % Find first index where change exceeds threshold
     startIdx = find(dV > threshold, 1, 'first');
 
+    % isempty function is used to check whether a variable contains any
+    % data or not. It returns a logical value. It outputs true when the
+    % variable is empty and false when the variable is not empty. This
+    % function works with arrays, strings, vectors, and other cell types.
+    % It is used here to check if the variable startIdx is empty or not.
+    % This is done to avoid errors.
     if ~isempty(startIdx)
         Initial_speed = columnData(startIdx);
     else
