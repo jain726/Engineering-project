@@ -2,21 +2,25 @@ function[new_data] = M3_sub2_222_21_sfujiwa(test_data)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ENGR 132 
 % Program Description 
-%replace this text with your program description as a comment
+% this function smoothen the original data, removes any frozen data and
+% linear interpolates removed frozen data and nan values. 
 %
 % Function Call
-% replace this text with a comment that states the function call
+% M3_sub2_222_21_sfujiwa
 %
 % Input Arguments
-% replace this text with a commented list of the input arguments
+% test_data
 %
 % Output Arguments
-% replace this text with a commented list of the output arguments
+% new_data
 %
 % Assignment Information
 %   Assignment:     M3, sub2
-%   Team member:    Name, login@purdue.edu [repeat for each person]
-%   Team ID:        ###-##
+%   Team member:    Team member: Max Barish, mbarish@purdue.edu 
+%   Team member:    Sidh Jain, jain726@purdue.edu 
+%   Team member:    Spencer Isbel, isbells@purdue.edu 
+%   Team member:    Saran Fujiwara, sfujiwa@purdue.edu
+%   Team ID:        222-21
 %   Academic Integrity:
 %     [] We worked with one or more peers but our collaboration
 %        maintained academic integrity.
@@ -26,8 +30,8 @@ function[new_data] = M3_sub2_222_21_sfujiwa(test_data)
 %% ____________________
 %% INITIALIZATION
 
-% % read matrix, only for use in making of subfunction
-%test_data = readmatrix("Sp25_cruiseAuto_experimental_data.csv");
+% read matrix, only for use in making of subfunction
+% test_data = readmatrix("Sp25_cruiseAuto_experimental_data.csv");
 
 time = test_data(:,1);
 
