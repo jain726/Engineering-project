@@ -1,3 +1,4 @@
+
 function [t_0, time_constant] = M3_sub3_222_21_isbells(test_data)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ENGR 132 
@@ -9,15 +10,22 @@ function [t_0, time_constant] = M3_sub3_222_21_isbells(test_data)
 % lower than the boundry, it sets the final velocity. Then it indexs that
 % velocity to the proper time. The time constant is calculated with the
 % found values.
+%
 % Function Call
 % M2_sub3_222_21_isbells
+%
 % Input Arguments
 % Test_data
+%
 % Output Arguments
 % t_0, time_constant
+%
 % Assignment Information
 %   Assignment:     M02, Problem 
-%   Team member:    Spencer Isbell, isbells@purdue.edu [repeat for each person]
+%   Team member:    Spencer Isbell, isbells@purdue.edu
+%   Team member:    Sidh Jain, jain726@purdue.edu 
+%   Team member:    Spencer Isbel, isbells@purdue.edu 
+%   Team member:    Saran Fujiwara, sfujiwa@purdue.edu
 %   Team ID:        222-21
 %   Academic Integrity:
 %     [x] We worked with one or more peers but our collaboration
@@ -63,26 +71,3 @@ found_timeconstant = 0; % initialize found_timeconstant
 end
 
 end
-
-
-
-
-
-%     %point mover
-%     for j = 1:size(col_data,1)
-% 
-%             if col_data(j) <= threshold(i) % check if vel. is less than threshold
-%                velo_at_last(i) = col_data(j); % set new velo at last
-%                j = j + 1; % index j
-%                t_0(i) = times(j); % index times at j to determine the time
-%             else     
-%                j = j + 1; % index j
-%             end % ends if statement
-% target_vel(i) = velo_at_last(i) + 0.632 * (top(i) - velo_at_last(i)); % set target velocity
-% 
-%             if found_timeconstant == 0 && col_data(i) >= target_vel(i)
-%                time_constant(i) = times(j) - t_0(i);
-%                found_timeconstant = 1; % mark as found
-%         end
-%     end
-% end
