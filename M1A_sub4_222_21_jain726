@@ -12,7 +12,7 @@ function [initial_speed, final_speed] = M3_sub4_222_21_jain726(Test_data)
 % Test Data
 %
 % Output Arguments
-% 1) Initial Velocity (averaged over every 5 columns)
+% 1) Initial Velocity (average of all values before startIdx)
 % 2) Final Velocity (maximum value, averaged over every 5 columns)
 %
 % Assignment Information
@@ -42,7 +42,8 @@ for col = 2:numCols
     % Find first index where change exceeds threshold
     startIdx = find(dV > threshold, 1, 'first');
     if ~isempty(startIdx)
-        Initial_speed = columnData(startIdx);
+        % Calculate the average of values before startIdx
+        Initial_speed = mean(columnData(1:startIdx-1));
     else
         Initial_speed = NaN;  % If no increase is found
     end
