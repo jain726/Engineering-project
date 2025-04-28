@@ -1,59 +1,51 @@
-function [initial_speed_matrix, final_speed_matrix] = M2_sub4_222_21_jain726(Test_data) 
+function [initial_speed, final_speed] = M2_sub4_222_21_jain726(Test_data)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ENGR 132 
 % Program Description 
 % Sub function to find the initial and final velocity from the velocity
-% data using change in slope across multiple threshold values.
+% data using change in slope.
 %
 % Function Call
-% [initial_speed_matrix, final_speed_matrix] = M2_sub4_222_21_jain726(Test_data)
+% [initial_speed, final_speed] = M2_sub4_222_21_jain726(Test_data)
 %
 % Input Arguments
 % Test Data
 %
 % Output Arguments
-% 1) Initial Velocity Matrix (rows: thresholds, columns: each data column)
-% 2) Final Velocity Matrix (same as above)
+% 1) Initial Velocity (when it starts increasing)
+% 2) Final Velocity (maximum value)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% INITIALIZATION
 data = readmatrix('Test_data');
 [numRows, numCols] = size(data);
-
-thresholds = 0:0.01:0.5;
-numThresholds = length(thresholds);
-
-initial_speed_matrix = zeros(numThresholds, numCols - 1);
-final_speed_matrix = zeros(numThresholds, numCols - 1);
+Initial_Speed_Vector = [];
+Final_Speed_Vector = [];
+threshold = 0.01; % Small change threshold to detect increase
 
 %% CALCULATIONS
-for t = 1:numThresholds
-    threshold = thresholds(t);
-    
-    for col = 2:numCols
-        columnData = data(:, col);
-        dV = diff(columnData);
+for col = 2:numCols
+    columnData = data(:, col);
+    dV = diff(columnData);  % Change in velocity
 
-        startIdx = find(dV > threshold, 1, 'first');
+    % Find first index where change exceeds threshold
+    startIdx = find(dV > threshold, 1, 'first');
 
-        if ~isempty(startIdx)
-            Initial_speed = columnData(startIdx);
-        else
-            Initial_speed = NaN;
-        end
-
-        Final_speed = max(columnData);
-
-        initial_speed_matrix(t, col - 1) = Initial_speed;
-        final_speed_matrix(t, col - 1) = Final_speed;
+    if ~isempty(startIdx)
+        Initial_speed = columnData(startIdx);
+    else
+        Initial_speed = NaN;  % If no increase is found
     end
+
+    Final_speed = max(columnData);
+
+    Initial_Speed_Vector = [Initial_Speed_Vector, Initial_speed];
+    Final_Speed_Vector = [Final_Speed_Vector, Final_speed];
 end
 
 %% OUTPUT
-disp('Initial Speeds for each threshold:');
-disp(initial_speed_matrix);
-
-disp('Final Speeds (should remain same across thresholds):');
-disp(final_speed_matrix);
+initial_speed = Initial_Speed_Vector;
+final_speed = Final_Speed_Vector;
+disp(final_speed)
 
 end
