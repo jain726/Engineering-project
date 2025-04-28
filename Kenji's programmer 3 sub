@@ -1,4 +1,4 @@
-function [average_t0 ,average_tau] = M4_sub3_222_21_isbells(test_data)
+%function [average_t0 ,average_tau] = M4_sub3_222_21_isbells(test_data)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ENGR 132 
 % Program Description 
@@ -27,7 +27,7 @@ function [average_t0 ,average_tau] = M4_sub3_222_21_isbells(test_data)
 
 %% ____________________ %% INITIALIZATION percent_wise = 0.02; % this is the "percent line" that we will compare to find where it does not "passback" times = Test_data(:,1); velocities = Test_data(:,2:end);
 
-%test_data = readmatrix('Sp25_cruiseAuto_experimental_data.csv');
+test_data = readmatrix('Sp25_cruiseAuto_experimental_data.csv');
 %test_data = readmatrix('Sp25_cruiseAuto_M3benchmark_data.csv');
 
 %% The code is an improvement and has been a complete change from the previous
@@ -91,10 +91,9 @@ for k = 1:9
 end
 
 % set rounded data to "tolerance" decimal places
+tolerance = 2; % tolerance value for rounding
 rounded_data_i = round(test_data(:,2:end), tolerance);
 rounded_data_i = [test_data(:,1) rounded_data_i];
-
-tolerance = 2; % tolerance value for rounding
 
 
 % for loop to find start time by finding mode of bottom third of data set
@@ -106,7 +105,7 @@ for n = 2 : length(test_data(1, 1:end))
     start_idx_i = find(rounded_data_i(1:row_i(1), n) == start_speed_i); % find last row in which new mode appears
     start_idx_i = start_idx_i(end);
 
-    t0(n-1) = test_data(start_idx_i, n);
+    t0(n-1) = test_data(start_idx_i, 1);
 end
 
 % for loop to average the t0 values
