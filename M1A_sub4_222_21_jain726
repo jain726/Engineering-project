@@ -1,4 +1,4 @@
-function [initial_speed, final_speed] = M2_sub4_222_21_jain726(Test_data)
+function [initial_speed, final_speed] = M3_sub4_222_21_jain726(Test_data)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ENGR 132 
 % Program Description 
@@ -6,22 +6,33 @@ function [initial_speed, final_speed] = M2_sub4_222_21_jain726(Test_data)
 % data using change in slope.
 %
 % Function Call
-% [initial_speed, final_speed] = M2_sub4_222_21_jain726(Test_data)
+% [initial_speed, final_speed] = M3_sub4_222_21_jain726(Test_data)
 %
 % Input Arguments
 % Test Data
 %
 % Output Arguments
-% 1) Initial Velocity (average before velocity starts increasing)
-% 2) Final Velocity (maximum value)
+% 1) Initial Velocity (averaged over every 5 columns)
+% 2) Final Velocity (maximum value, averaged over every 5 columns)
+%
+% Assignment Information
+%   Assignment:     M3, sub4
+%   Team member:    Max Barish, mbarish@purdue.edu 
+%                   Sidh Jain, jain726@purdue.edu 
+%                   Spencer Isbel, isbells@purdue.edu 
+%                   Saran Fujiwara, sfujiwa@purdue.edu
+%   Team ID:        222-21
+%   Academic Integrity:
+%     [] We worked with one or more peers but our collaboration
+%        maintained academic integrity.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% INITIALIZATION
-data = readmatrix('Test_data');
+data = readmatrix('Sp25_cruiseAuto_experimental_data');
 [numRows, numCols] = size(data);
 Initial_Speed_Vector = [];
 Final_Speed_Vector = [];
-threshold = 0.01; % Small change threshold to detect increase
+threshold = 0.001; % Small change threshold to detect increase
 
 %% CALCULATIONS
 for col = 2:numCols
@@ -30,11 +41,8 @@ for col = 2:numCols
 
     % Find first index where change exceeds threshold
     startIdx = find(dV > threshold, 1, 'first');
-
-    if ~isempty(startIdx) && startIdx > 1
-        Initial_speed = mean(columnData(1:startIdx-1)); % average before startIdx
-    elseif ~isempty(startIdx) && startIdx == 1
-        Initial_speed = columnData(1); % only first value if startIdx is 1
+    if ~isempty(startIdx)
+        Initial_speed = columnData(startIdx);
     else
         Initial_speed = NaN;  % If no increase is found
     end
@@ -45,9 +53,12 @@ for col = 2:numCols
     Final_Speed_Vector = [Final_Speed_Vector, Final_speed];
 end
 
+%% AVERAGING INTO 9 VALUES
+Initial_Speed_Vector = mean(reshape(Initial_Speed_Vector, 5, []));
+Final_Speed_Vector = mean(reshape(Final_Speed_Vector, 5, []));
+
 %% OUTPUT
 initial_speed = Initial_Speed_Vector;
 final_speed = Final_Speed_Vector;
-disp(final_speed)
 
 end
