@@ -1,0 +1,117 @@
+function [average_t0 ,average_tau] = M4_sub3_222_21_isbells(test_data)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ENGR 132 
+% Program Description 
+% This program imputs the test data. Then it sets a "boundry line" this is
+% a percentage of the total height. It then moves through the each
+% coulumn, "i". In each column, it then moves through every value,"j". Then
+% it compares the current j value to the boundry line. While the j value is
+% lower than the boundry, it sets the final velocity. Then it indexs that
+% velocity to the proper time. The time constant is calculated with the
+% found values.
+% Function Call
+% M2_sub3_222_21_isbells
+% Input Arguments
+% Test_data
+% Output Arguments
+% t_0, time_constant
+% Assignment Information
+%   Assignment:     M4, sub 4
+%   Team member:    Spencer Isbell, isbells@purdue.edu [repeat for each person]
+%   Team ID:        222-21
+%   Academic Integrity:
+%     [x] We worked with one or more peers but our collaboration
+%        maintained academic integrity.
+%     Peers we worked with: Name, login@purdue [repeat for each]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% ____________________ %% INITIALIZATION percent_wise = 0.02; % this is the "percent line" that we will compare to find where it does not "passback" times = Test_data(:,1); velocities = Test_data(:,2:end);
+
+%test_data = readmatrix('Sp25_cruiseAuto_experimental_data.csv');
+%test_data = readmatrix('Sp25_cruiseAuto_M3benchmark_data.csv');
+
+%% The code is an improvement and has been a complete change from the previous
+% The last method for finding tau involves finding a threshold, this code
+% uses mode to find the initial and end times. 
+
+% Uses Linear interpolation in order to fill in the gaps where NaN is
+% present. 
+for n = 2 : length(test_data(1, 1:end))
+    m = 1;
+    while m < length(test_data(1:end, 1)) - 4
+        if isnan(test_data(m, n))
+            idxi = m;
+            idx = 0;
+            idxf = 0;
+            % finds te interval between start of NaN chain and end of NaN
+            % chain for linspace to work.
+            while isnan(test_data(m + idx, n))
+                idx = idx + 1;
+                idxf = m + idx;
+            end
+            temp_data = linspace(test_data(idxi-1, n), test_data(idxf + 1, n), idx + 2);
+            test_data(idxi:idxf+1, n) = temp_data;
+
+            m = m + idx;
+        end
+        m = m + 1;
+    end
+end
+
+% round data to 0 decimal points / integers
+rounded_data = round(test_data(:,2:end), 0);
+rounded_data = [test_data(:,1) rounded_data];
+
+idx = 0;
+
+% find the end speed and start speed and multiply by a constant to give the
+% time constant in the for loop
+for n = 2 : length(test_data(1, 1:end))
+    data_mid = round((max(test_data(:,n)) - min(test_data(:,n))) / 2, 0); % finds the median y value in data set
+    row = find(abs(rounded_data(:,n) - data_mid) <= 1); % find the row in which the median y value is located
+
+    start_speed = mode(rounded_data(1:row(1) , n));
+    start_idx = find(abs(rounded_data(:, n) - start_speed) <= 3); % find last row in which new mode appears
+    start_idx = start_idx(end);
+
+    end_speed_rounded = mode(rounded_data(:,n));
+    end_idx = find(abs(rounded_data(:,n) - end_speed_rounded) <= 3);
+    end_idx = end_idx(1);
+
+    idx = idx + 1;
+    time_constant(idx) = 0.632 * (test_data(end_idx, 1) - test_data(start_idx, 1));
+end
+
+% averages the value for time constant for each vehicle and weather
+% settings
+for k = 1:9
+    first = (k-1)*5+1;
+    fifth = k*5;
+    average_tau(k) = mean(time_constant(first:fifth));
+end
+
+% set rounded data to "tolerance" decimal places
+rounded_data_i = round(test_data(:,2:end), tolerance);
+rounded_data_i = [test_data(:,1) rounded_data_i];
+
+tolerance = 2; % tolerance value for rounding
+
+
+% for loop to find start time by finding mode of bottom third of data set
+for n = 2 : length(test_data(1, 1:end))
+    data_mid_i = round((max(test_data(:,n)) - min(test_data(:,n))) / 3, tolerance); % finds the third of max y value in data set
+    row_i = find(abs(rounded_data_i(:,n) - data_mid_i) <= 1); % find the row in which the median y value is located
+
+    start_speed_i = mode(rounded_data_i(1:row_i(1) , n));
+    start_idx_i = find(rounded_data_i(1:row_i(1), n) == start_speed_i); % find last row in which new mode appears
+    start_idx_i = start_idx_i(end);
+
+    t0(n-1) = test_data(start_idx_i, n);
+end
+
+% for loop to average the t0 values
+for k = 1:9
+    first = (k-1)*5+1;
+    fifth = k*5;
+    average_t0(k) = mean(t0(first:fifth));
+end
