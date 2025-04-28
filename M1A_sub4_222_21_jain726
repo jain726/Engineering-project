@@ -12,7 +12,7 @@ function [initial_speed, final_speed] = M2_sub4_222_21_jain726(Test_data)
 % Test Data
 %
 % Output Arguments
-% 1) Initial Velocity (when it starts increasing)
+% 1) Initial Velocity (average before velocity starts increasing)
 % 2) Final Velocity (maximum value)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -31,8 +31,10 @@ for col = 2:numCols
     % Find first index where change exceeds threshold
     startIdx = find(dV > threshold, 1, 'first');
 
-    if ~isempty(startIdx)
-        Initial_speed = columnData(startIdx);
+    if ~isempty(startIdx) && startIdx > 1
+        Initial_speed = mean(columnData(1:startIdx-1)); % average before startIdx
+    elseif ~isempty(startIdx) && startIdx == 1
+        Initial_speed = columnData(1); % only first value if startIdx is 1
     else
         Initial_speed = NaN;  % If no increase is found
     end
