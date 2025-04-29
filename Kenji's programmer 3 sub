@@ -1,4 +1,4 @@
-%function [average_t0 ,average_tau] = M4_sub3_222_21_isbells(test_data)
+function [average_t0 ,average_tau] = M4_sub3_222_21_isbells(test_data, new_data)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ENGR 132 
 % Program Description 
@@ -27,7 +27,7 @@
 
 %% ____________________ %% INITIALIZATION percent_wise = 0.02; % this is the "percent line" that we will compare to find where it does not "passback" times = Test_data(:,1); velocities = Test_data(:,2:end);
 
-test_data = readmatrix('Sp25_cruiseAuto_experimental_data.csv');
+%test_data = readmatrix('Sp25_cruiseAuto_experimental_data.csv');
 %test_data = readmatrix('Sp25_cruiseAuto_M3benchmark_data.csv');
 
 %% The code is an improvement and has been a complete change from the previous
@@ -90,22 +90,25 @@ for k = 1:9
     average_tau(k) = mean(time_constant(first:fifth));
 end
 
-% set rounded data to "tolerance" decimal places
-tolerance = 2; % tolerance value for rounding
-rounded_data_i = round(test_data(:,2:end), tolerance);
-rounded_data_i = [test_data(:,1) rounded_data_i];
-
+tolerance = 0.1; % tolerance value for threshold
 
 % for loop to find start time by finding mode of bottom third of data set
 for n = 2 : length(test_data(1, 1:end))
-    data_mid_i = round((max(test_data(:,n)) - min(test_data(:,n))) / 3, tolerance); % finds the third of max y value in data set
-    row_i = find(abs(rounded_data_i(:,n) - data_mid_i) <= 1); % find the row in which the median y value is located
 
-    start_speed_i = mode(rounded_data_i(1:row_i(1) , n));
-    start_idx_i = find(rounded_data_i(1:row_i(1), n) == start_speed_i); % find last row in which new mode appears
-    start_idx_i = start_idx_i(end);
+    max_set = max(new_data(:,n));
+    min_set = min(new_data(:,n));
+    threshold = (max_set - min_set) * tolerance;
 
-    t0(n-1) = test_data(start_idx_i, 1);
+m = 1;
+    % loops runs through column until value crosses the threshold, assings
+    % t0 with new values
+    while m <= length(new_data(:, n)) && (isnan(new_data(m, n)) || new_data(m, n) < threshold)
+        m = m + 1;
+    end
+
+    if m <= length(new_data(:, n))
+        t0(n-1) = time(m);
+    end
 end
 
 % for loop to average the t0 values
